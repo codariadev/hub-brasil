@@ -1,0 +1,86 @@
+from app.integrations.sources.base import SourceDefinition
+
+SOURCE_CATALOG = (
+    SourceDefinition(
+        id="ibge-news",
+        name="Agência IBGE Notícias",
+        url=(
+            "https://servicodados.ibge.gov.br/api/v3/noticias/"
+            "?qtd=20&tipo=noticia&introsize=300"
+        ),
+        allowed_host="servicodados.ibge.gov.br",
+        allowed_link_hosts=("agenciadenoticias.ibge.gov.br",),
+        format="ibge_news",
+        suggested_category_ids=(),
+    ),
+    SourceDefinition(
+        id="ministerio-saude",
+        name="Ministério da Saúde",
+        url="https://www.gov.br/saude/pt-br/assuntos/noticias/rss.xml",
+        allowed_host="www.gov.br",
+        format="rss",
+        suggested_category_ids=("saude",),
+    ),
+    SourceDefinition(
+        id="noticias-sc",
+        name="Notícias SC",
+        url="https://noticias.sc.gov.br/feed/",
+        allowed_host="noticias.sc.gov.br",
+        format="rss",
+        suggested_category_ids=(),
+        scope="state",
+        state_ids=("SC",),
+    ),
+    SourceDefinition(
+        id="defesa-civil-sc",
+        name="Defesa Civil de Santa Catarina",
+        url="https://www.defesacivil.sc.gov.br/feed/",
+        allowed_host="www.defesacivil.sc.gov.br",
+        format="rss",
+        suggested_category_ids=("seguranca-meio-ambiente",),
+        scope="state",
+        state_ids=("SC",),
+    ),
+    SourceDefinition(
+        id="alesc-agencia",
+        name="Agência Alesc",
+        url="https://www.alesc.sc.gov.br/agencia/feed/",
+        allowed_host="www.alesc.sc.gov.br",
+        format="rss",
+        suggested_category_ids=("governo-decisoes",),
+        scope="state",
+        state_ids=("SC",),
+    ),
+    SourceDefinition(
+        id="ans-beneficiarios",
+        name="ANS - Beneficiários",
+        url="https://www.gov.br/ans/pt-br/assuntos/noticias/beneficiario/rss.xml",
+        allowed_host="www.gov.br",
+        format="rss",
+        suggested_category_ids=("saude", "direitos-cotidiano"),
+    ),
+    SourceDefinition(
+        id="ans-operadoras",
+        name="ANS - Operadoras",
+        url="https://www.gov.br/ans/pt-br/assuntos/noticias/operadoras/rss.xml",
+        allowed_host="www.gov.br",
+        format="rss",
+        suggested_category_ids=("saude",),
+    ),
+    SourceDefinition(
+        id="ibama",
+        name="IBAMA",
+        url="https://www.gov.br/ibama/pt-br/RSS",
+        allowed_host="www.gov.br",
+        format="rss",
+        suggested_category_ids=("seguranca-meio-ambiente",),
+    ),
+    SourceDefinition(
+        id="planalto",
+        name="Presidência da República",
+        url="https://www.gov.br/planalto/pt-br/acompanhe-o-planalto/noticias/rss.xml",
+        allowed_host="www.gov.br",
+        format="rss",
+        suggested_category_ids=("governo-decisoes",),
+    ),
+)

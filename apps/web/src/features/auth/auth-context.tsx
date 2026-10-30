@@ -9,6 +9,7 @@ import {
 } from "react";
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -26,6 +27,8 @@ type AuthContextValue = {
   configurationError: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
+  refreshUser: () => Promise<boolean>;
   signOutUser: () => Promise<void>;
 };
 
@@ -33,6 +36,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [, setSessionRevision] = useState(0);
   const [configurationError] = useState(getFirebaseConfigurationError);
   const [loading, setLoading] = useState(!configurationError);
 
@@ -55,6 +59,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password
     );
     await updateProfile(credential.user, { displayName: name });
+    await sendEmailVerification(credential.user);
+  }
+
+  async function sendVerificationEmail() {
+    const currentUser = getFirebaseAuth().currentUser;
+    if (!currentUser) throw new Error("Entre na sua conta para continuar.");
+    await sendEmailVerification(currentUser);
+  }
+
+  async function refreshUser(): Promise<boolean> {
+    const currentUser = getFirebaseAuth().currentUser;
+    if (!currentUser) throw new Error("Entre na sua conta para continuar.");
+    await currentUser.reload();
+    await currentUser.getIdToken(true);
+    setUser(currentUser);
+    setSessionRevision((revision) => revision + 1);
+    return currentUser.emailVerified;
   }
 
   async function signOutUser() {
@@ -63,7 +84,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, configurationError, signIn, signUp, signOutUser }}
+      value={{
+        user,
+        loading,
+        configurationError,
+        signIn,
+        signUp,
+        sendVerificationEmail,
+        refreshUser,
+        signOutUser
+      }}
     >
       {children}
     </AuthContext.Provider>

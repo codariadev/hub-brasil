@@ -1,35 +1,25 @@
 import Link from "next/link";
 import { AccountNav } from "@/features/auth/account-nav";
+import { ArticleList } from "@/features/articles/article-list";
+import { CategoryList } from "@/features/home/category-list";
+import { fetchPublicApi } from "@/lib/api/public";
+import type { Article } from "@/types/article";
+import type { Category } from "@/types/category";
 
-
-const pillars = [
-  {
-    title: "Bolso e economia",
-    description: "Entenda mudanças em preços, impostos, emprego e renda."
-  },
-  {
-    title: "Saúde",
-    description: "Acompanhe decisões, campanhas, serviços e orientações."
-  },
-  {
-    title: "Educação",
-    description: "Informações sobre escolas, universidades e oportunidades."
-  },
-  {
-    title: "Direitos e cotidiano",
-    description: "Saiba quais são seus direitos e como acessá-los."
-  },
-  {
-    title: "Governo e decisões",
-    description: "Entenda decisões públicas e como elas afetam a população."
-  },
-  {
-    title: "Segurança e meio ambiente",
-    description: "Acompanhe alertas, políticas e acontecimentos relevantes."
+async function loadContent<T>(path: string): Promise<T | null> {
+  try {
+    return await fetchPublicApi<T>(path);
+  } catch {
+    return null;
   }
-];
+}
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [articles, categories] = await Promise.all([
+    loadContent<Article[]>("articles"),
+    loadContent<Category[]>("categories"),
+  ]);
+
   return (
     <main className="min-h-screen">
       <header className="border-b border-[var(--border)] bg-white">
@@ -83,32 +73,14 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-dashed border-[var(--border)] bg-white p-8">
-          <p className="font-semibold">Conteúdo editorial em preparação</p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
-            As publicações serão exibidas aqui após a implementação do fluxo
-            editorial e da integração com o banco de dados.
-          </p>
-        </div>
+        <ArticleList articles={articles} error={articles === null} />
       </section>
 
       <section id="categorias" className="bg-white px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-bold">Entenda por assunto</h2>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {pillars.map((pillar) => (
-              <article
-                key={pillar.title}
-                className="rounded-xl border border-[var(--border)] p-6 transition hover:border-[var(--primary)]"
-              >
-                <h3 className="text-lg font-bold">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-                  {pillar.description}
-                </p>
-              </article>
-            ))}
-          </div>
+          <CategoryList categories={categories} error={categories === null} />
         </div>
       </section>
 
