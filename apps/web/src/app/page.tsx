@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountNav } from "@/features/auth/account-nav";
 
 
 const pillars = [
@@ -43,16 +44,11 @@ export default function HomePage() {
             <Link href="#orientacao">Orientação</Link>
           </nav>
 
-          <Link
-            href="/login"
-            className="rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-white"
-          >
-            Entrar
-          </Link>
+          <AccountNav />
         </div>
       </header>
 
-      <section className="bg-[var(--primary)] px-6 py-20 text-white">
+      <section className="bg-[#17483f] px-6 py-20 text-white">
         <div className="mx-auto max-w-7xl">
           <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-amber-300">
             Informação pública em linguagem acessível
@@ -69,7 +65,7 @@ export default function HomePage() {
 
           <Link
             href="#brasil"
-            className="mt-8 inline-block rounded-lg bg-amber-400 px-6 py-3 font-semibold text-slate-950"
+            className="mt-8 inline-block rounded-lg bg-amber-400 px-6 py-3 font-semibold !text-slate-950"
           >
             Explorar informações
           </Link>
